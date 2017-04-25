@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 
 int main()
@@ -6,19 +7,41 @@ int main()
 {
 	int j,i,n,m;
 	//int m,i,j,n,k;
+	/* 
+	
+	[0]=PG
+	[1]=GM
+	[2]=GS
+	[3]=S(SALDO)
+	[4]=V(VITORIAS)
+	[5]=GA(GM/GS)
+	[6]=E(EMPATE)
+	[7]=J(JOGOS)
+	[8]=AP(APROVEITAMENTO)
+
+	*/
 	printf("SELECIONE A QUANTIDADE DE TIMES: \n");
 	scanf("%d",&n);
-	int PG,GM,S,V,GA,gol1,gol2;
+	int *E,*PG,*GM,*S,*V,*GA,*GS,gol1,gol2,*J;
+	FILE *jogo = fopen("jogo.txt","a");
 	//char **time,*time1,*time2,**clas;
 	int **tabela;
 	char **times,**result,*time1,*time2;
 	// ZERAR TABELA 
 	tabela=(int**)calloc(n,sizeof(int*));
 	times=(char**)calloc(n,sizeof(char*));
+	PG=(int*)calloc(n,sizeof(int));
+	GM=(int*)calloc(n,sizeof(int));
+	GS=(int*)calloc(n,sizeof(int));
+	S =(int*)calloc(n,sizeof(int));
+	V =(int*)calloc(n,sizeof(int));
+	GA=(int*)calloc(n,sizeof(int));
+	E =(int*)calloc(n,sizeof(int));
 
 	// RECEBE OS NOMES E OS GUARDA
 	for(i=0;i<n;i++){
-	times[i]=(char*)calloc(7,sizeof(char));
+	times[i]=(char*)calloc(30,sizeof(char));
+	tabela[i]=(int*)calloc(10,sizeof(int));
 	printf("NOME DO TIME NUMERO %d: \n", i+1);
 	scanf("%s",&times[i][0]);
 	}
@@ -26,89 +49,60 @@ int main()
 	
 	printf("SELECIONE A QUANTIDADE DE JOGOS: \n");
 	scanf("%d",&m);
-	time1=(char*)calloc(1,sizeof(char));
-	time2=(char*)calloc(1,sizeof(char));
+	time1=(char*)calloc(30,sizeof(char));
+	time2=(char*)calloc(30,sizeof(char));
 	for(i=0;i<m;i++){
 		printf("%d° JOGO\n", i+1);
-		scanf("%s %s %d %d",&time1,&time2,&gol1,&gol2);
+		scanf("%s %s %d %d",time1,time2,&gol1,&gol2);
+		fprintf(jogo,"%s %s %d %d\n", time1,time2,gol1,gol2);
 		for(j=0;j<n;j++){
 		if (strcmp(time1,times[j])==0)
 		{
-			printf("EH NOIS\n");	
-		}}
-
-	}
-	// RECEBE OS NOMES E OS GUARDA
-	/*
-	for (i = 0; i < n; i++)
-	{	
-		printf("NOME DO TIME NUMERO %d: \n", i+1);
-		scanf("%s",&time[i][0]);
-		tabela[i][0]=i;
-	}
-	// RECEBE A QUANTIDADE DE JOGOS E GUARDA O RESULTADO
-	printf("SELECIONE A QUANTIDADE DE JOGOS: \n");
-	scanf("%d",&m);
-	for (i = 0; i < m; i++)
-	{	
-		printf("%do JOGO\n", i+1);
-		scanf("%s %s %d %d",&time1,&time2,&gol1,&gol2);
-		for (j = 0; j < n; j++)
-		{	
-			// COMPARA OS NOMES DOS TIMES COM OS DA TABELA
-			if (strcmp(time1,time[j])==0)
-			{
-				// ADICIONA OS GOLS MARCADOS NA TABELA 
-				if (gol1>gol2)
-				{
-					tabela[j][1]+=3;
-					tabela[j][5]++;
-				}else if(gol1==gol2){
-					tabela[j][1]+=1;
-				}
-				tabela[j][2]+=gol1;
-				tabela[j][3]+=gol2;
-
-			}
-			if (strcmp(time2,time[j])==0)
-			{
-				if (gol1<gol2)
-				{
-					tabela[j][1]+=3;
-					tabela[j][5]++;
-				}else if(gol1==gol2){
-					tabela[j][1]+=1;
-				}
+			if(gol1>gol2){
+				tabela[j][0]+=3;
+				tabela[j][1]+=gol1;
 				tabela[j][2]+=gol2;
-				tabela[j][3]+=gol1;
+				tabela[j][4]++;
+				tabela[j][7]++;
+			}else if(gol1==gol2){
+				tabela[j][0]+=1;
+				tabela[j][1]+=gol1;
+				tabela[j][2]+=gol2;
+				tabela[j][6]++;
+				tabela[j][7]++;
+			
+			}else if(gol1<gol2){
+				tabela[j][1]+=gol1;
+				tabela[j][2]+=gol2;
+				tabela[j][7]++;
 			}
 		}
-	}
-	// CALCULA E ADICIONA OS PONTOS NA TABELA
-	for(i=0;i<n;i++){
-	tabela[i][4]=tabela[i][2]-tabela[i][3];
-	if(tabela[i][3]!=0){
-	tabela[i][6]=tabela[i][2]/tabela[i][3];		
+		if (strcmp(time2,times[j])==0)
+		{
+			if(gol2>gol1){
+				tabela[j][0]+=3;
+				tabela[j][1]+=gol2;
+				tabela[j][2]+=gol1;
+				tabela[j][4]++;
+				tabela[j][7]++;
+			}else if(gol1==gol2){
+				tabela[j][0]+=1;
+				tabela[j][1]+=gol2;
+				tabela[j][2]+=gol1;
+				tabela[j][6]++;
+				tabela[j][7]++;
+			
+			}else if(gol2<gol1){
+				tabela[j][1]+=gol2;
+				tabela[j][2]+=gol1;
+				tabela[j][7]++;
+			}			
 		}
 	}
-
-	// REORGANIZA OS TIMES DE ACORDO COM A PONTUAÇÃO
-	for(i=0;i<n;i++){
-		for(j=0;j<n;j++){
-			for(k=0;k<n;k++){
-				if (tabela[j][1]>tabela[k][1])
-				{
-					result[i][7]=tabela[j];
-					clas[i]=time[j];
-				}
-			}
-		}
-	printf("%s\n",clas[i]);
-	}*/
-
-	// IMPRIME A CLASSIFICAÇÃO DOS TIMES 
-
-	//printf("%s %d pontos. Gols marcados = %d Vitorias %d\n", time[i],tabela[i][1],tabela[i][2],tabela[i][5]);
-    return 0;
-
+	}
+	for(j=0;j<n;j++) fprintf(stdout,"%15s PG:%d GM:%d GS:%d SALDO:%d JOGOS:%d EMPATE:%d VITORIAS:%d\n", times[j],tabela[j][0],tabela[j][1],tabela[j][2],tabela[j][1]-tabela[j][2],tabela[j][7],tabela[j][6],tabela[j][4]);
+	
+	//fprintf(jogo,"%s PG:%d VITORIAS%d\n", time1,tabela[j][0],tabela[j][4]);
+	fclose(jogo);
+	return 0;
 }
