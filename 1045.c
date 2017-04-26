@@ -5,7 +5,7 @@
 int main()
 
 {
-	int j,i,n,m;
+	int j,i,n,m=0,k;
 	/* 
 	
 	[0]=PG
@@ -17,16 +17,26 @@ int main()
 	[6]=E(EMPATE)
 	[7]=J(JOGOS)
 	[8]=AP(APROVEITAMENTO)
-
 	*/
 	FILE *tim= fopen("times.txt","r");
 	FILE *jogos=fopen("jogos.txt","r");
-	printf("\n\n******************************************%10s*******************************************\n\n","CLASSIFICAÇÃO");
+	FILE *jogo = fopen("jogo.txt","w+");
 	fscanf(tim,"%d",&n);
 	int gol1,gol2;
 	double **tabela;
 	double aprov;
-	char **times,*time1,*time2;
+	char **times,*time1,*time2,ch[80];
+
+	//NUMERO DE LINHAS
+	while(fgets(ch,80,jogos)){
+		m++;
+	}
+	fprintf(jogo, "Total de times: %d\n", n);
+	fprintf(jogo, "Total de jogos: %d\n", m);
+
+	fprintf(stdout, "Total de times: %d\n", n);
+	fprintf(stdout, "Total de jogos: %d\n", m);
+	rewind(jogos);
 
 	// ZERAR TABELA 
 	tabela=(double**)calloc(n,sizeof(double*));
@@ -39,7 +49,7 @@ int main()
 	fscanf(tim,"%s",&times[i][0]);
 	}	
 	
-	fscanf(jogos,"%d",&m);
+	//fscanf(jogos,"%d",&m);
 	time1=(char*)calloc(30,sizeof(char));
 	time2=(char*)calloc(30,sizeof(char));
 	for(i=0;i<m;i++){
@@ -96,7 +106,7 @@ int main()
 		if(tabela[i][2]!=0){
 			tabela[i][5]=tabela[i][1]/tabela[i][2];
 		}else{
-			tabela[i][5]=999;
+			tabela[i][5]=2;
 		}
 	//APROVEITAMENTO
 		tabela[i][8]=tabela[i][0]/(tabela[i][7]*3)*100;
@@ -112,126 +122,69 @@ int main()
 			time1=times[i];
 			times[i]=times[j];
 			times[j]=time1;
-			m=tabela[i][0];
-			tabela[i][0]=tabela[j][0];
-			tabela[j][0]=m;
-			m=tabela[i][1];
-			tabela[i][1]=tabela[j][1];
-			tabela[j][1]=m;
-			m=tabela[i][2];
-			tabela[i][2]=tabela[j][2];
-			tabela[j][2]=m;
-			m=tabela[i][3];
-			tabela[i][3]=tabela[j][3];
-			tabela[j][3]=m;
-			m=tabela[i][4];
-			tabela[i][4]=tabela[j][4];
-			tabela[j][4]=m;
-			m=tabela[i][5];
-			tabela[i][5]=tabela[j][5];
-			tabela[j][5]=m;
-			m=tabela[i][6];
-			tabela[i][6]=tabela[j][6];
-			tabela[j][6]=m;
-			m=tabela[i][7];
-			tabela[i][7]=tabela[j][7];
-			tabela[j][7]=m;
-			m=tabela[i][5];
-			tabela[i][5]=tabela[j][5];
-			tabela[j][5]=m;
-			aprov=tabela[i][8];
-			tabela[i][8]=tabela[j][8];
-			tabela[j][8]=aprov;
+			for(k=0;k<9;k++){
+			aprov=tabela[i][k];
+			tabela[i][k]=tabela[j][k];
+			tabela[j][k]=aprov;
+			}
 		}else if(tabela[i][0]==tabela[j][0]){
 			if (tabela[i][3]>tabela[j][3])
 			{
 			time1=times[i];
 			times[i]=times[j];
 			times[j]=time1;
-			m=tabela[i][0];
-			tabela[i][0]=tabela[j][0];
-			tabela[j][0]=m;
-			m=tabela[i][1];
-			tabela[i][1]=tabela[j][1];
-			tabela[j][1]=m;
-			m=tabela[i][2];
-			tabela[i][2]=tabela[j][2];
-			tabela[j][2]=m;
-			m=tabela[i][3];
-			tabela[i][3]=tabela[j][3];
-			tabela[j][3]=m;
-			m=tabela[i][4];
-			tabela[i][4]=tabela[j][4];
-			tabela[j][4]=m;
-			m=tabela[i][5];
-			tabela[i][5]=tabela[j][5];
-			tabela[j][5]=m;
-			m=tabela[i][6];
-			tabela[i][6]=tabela[j][6];
-			tabela[j][6]=m;
-			m=tabela[i][7];
-			tabela[i][7]=tabela[j][7];
-			tabela[j][7]=m;
-			aprov=tabela[i][5];
-			tabela[i][5]=tabela[j][5];
-			tabela[j][5]=aprov;
-			aprov=tabela[i][8];
-			tabela[i][8]=tabela[j][8];
-			tabela[j][8]=aprov;
+			for(k=0;k<9;k++){
+			aprov=tabela[i][k];
+			tabela[i][k]=tabela[j][k];
+			tabela[j][k]=aprov;}
 			}else if(tabela[i][3]==tabela[j][3]){
 			if (tabela[i][1]<tabela[j][1])
 			{
 			time1=times[i];
 			times[i]=times[j];
 			times[j]=time1;
-			m=tabela[i][0];
-			tabela[i][0]=tabela[j][0];
-			tabela[j][0]=m;
-			m=tabela[i][1];
-			tabela[	i][1]=tabela[j][1];
-			tabela[j][1]=m;
-			m=tabela[i][2];
-			tabela[i][2]=tabela[j][2];
-			tabela[j][2]=m;
-			m=tabela[i][3];
-			tabela[i][3]=tabela[j][3];
-			tabela[j][3]=m;
-			m=tabela[i][4];
-			tabela[i][4]=tabela[j][4];
-			tabela[j][4]=m;
-			m=tabela[i][5];
-			tabela[i][5]=tabela[j][5];
-			tabela[j][5]=m;
-			m=tabela[i][6];
-			tabela[i][6]=tabela[j][6];
-			tabela[j][6]=m;
-			m=tabela[i][7];
-			tabela[i][7]=tabela[j][7];
-			tabela[j][7]=m;
-			aprov=tabela[i][5];
-			tabela[i][5]=tabela[j][5];
-			tabela[j][5]=aprov;
-			aprov=tabela[i][8];
-			tabela[i][8]=tabela[j][8];
-			tabela[j][8]=aprov;
+			for(k=0;k<9;k++){
+			aprov=tabela[i][k];
+			tabela[i][k]=tabela[j][k];
+			tabela[j][k]=aprov;}
 			}
 		}
 	}
 	}
 }
-	for(j=0;j<n;j++) fprintf(stdout,"%15s PG:%.0lf GM:%.0lf GS:%.0lf SALDO:%.0lf JOGOS:%.0lf VITORIAS:%.0lf EMPATE:%.0lf GA:%.0lf APROVEITAMENTO: %.2lf\n", times[j],tabela[j][0],tabela[j][1],tabela[j][2],tabela[j][3],tabela[j][7],tabela[j][4],tabela[j][6],tabela[j][5],tabela[j][8]);
-	free(time1);
-	free(time2);
-	for(i=0;i<n;i++){
-		free(tabela[i]);
-		free(times[i]);
+//Exibe no terminal
+
+
+fprintf(stdout,"Time              PG:  GM:  GS:  S:   V:   GA:    J:    E:  AP: \n");
+
+for(j=0;j<n;j++){
+	fprintf(stdout,"%15s %4.0lf %4.0lf %4.0lf %4.0lf %4.0lf %6.2lf %4.0lf %4.0lf %6.2lf%s", times[j],tabela[j][0],tabela[j][1],tabela[j][2],tabela[j][3],tabela[j][4],tabela[j][5],tabela[j][7],tabela[j][6], tabela[j][8],"%");
+	fprintf(stdout,"\n");
+}
+
+// Grava no arquivo
+
+	fprintf(jogo,"Time              PG:  GM:  GS:  S:   V:   GA:    J:    E:  AP: \n");
+
+	for(j=0;j<n;j++){
+		fprintf(jogo,"%15s %4.0lf %4.0lf %4.0lf %4.0lf %4.0lf %6.2lf %4.0lf %4.0lf %6.2lf%s", times[j],tabela[j][0],tabela[j][1],tabela[j][2],tabela[j][3],tabela[j][4],tabela[j][5],tabela[j][7],tabela[j][6], tabela[j][8],"%");
+		fprintf(jogo,"\n");
 	}
+	//LIBERAR MEMORIA E FECHAR OS ARQUIVOS
+	free(time1);
+	free(time2);	
+	for(i=0;i<n;i++){
+	free(tabela[i]);
+	free(times[i]);
+	}
+	free(tabela);
+	free(times);
+
+	fclose(jogo);
 	fclose(jogos);
 	fclose(tim);
-	printf("\n\n******************************************%10s*******************************************\n\n","*************");
 
-	
-	
+
     return 0;
 
 }
